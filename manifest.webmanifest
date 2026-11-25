@@ -1,0 +1,13 @@
+{
+  "name": "Boraí — Mobilidade que aproxima",
+  "short_name": "Boraí",
+  "description": "Protótipo acadêmico de aplicativo de mobilidade urbana.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fffaf2",
+  "theme_color": "#ee7900",
+  "icons": [
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
