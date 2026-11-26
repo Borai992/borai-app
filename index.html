@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ee7900">
+  <meta name="description" content="Boraí — mobilidade urbana mais simples. Planeje seus deslocamentos e encontre informações de transporte.">
+  <title>Boraí — Mobilidade que aproxima</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="header-top">
+        <button class="icon-button menu-button" id="menuButton" aria-label="Abrir menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+        <button class="city-picker" id="cityPicker" aria-label="Selecionar cidade">
+          <span class="city-pin">⌖</span>
+          <span id="cityLabel">SP - Mogi das Cruzes</span>
+          <span class="chevron-down">⌄</span>
+        </button>
+      </div>
+      <form class="search-form" id="searchForm" role="search">
+        <label class="visually-hidden" for="globalSearch">Pesquisar no Boraí</label>
+        <input id="globalSearch" type="search" placeholder="Pesquisar" autocomplete="off">
+        <button type="submit" aria-label="Pesquisar"><span class="search-icon"></span></button>
+      </form>
+    </header>
+
+    <main id="mainContent" class="main-content">
+      <section class="home-view" id="homeView" aria-label="Início">
+        <div class="quick-section">
+          <div class="quick-row">
+            <div class="quick-copy">
+              <h2>Rota</h2>
+              <button class="outline-pill" id="addRouteButton"><span class="pin-icon">●</span> Adicionar</button>
+            </div>
+            <button class="row-arrow" id="routeArrow" aria-label="Planejar rota">›</button>
+          </div>
+          <div class="quick-divider"></div>
+          <div class="quick-row transport-row">
+            <div class="bus-icon" aria-hidden="true">
+              <svg viewBox="0 0 64 64"><rect x="10" y="7" width="44" height="49" rx="9"/><rect x="16" y="14" width="32" height="18" rx="3"/><path d="M16 38h32M18 55v4M46 55v4"/><circle cx="19" cy="45" r="3"/><circle cx="45" cy="45" r="3"/></svg>
+            </div>
+            <div class="quick-copy">
+              <h2>Transporte</h2>
+              <button class="outline-pill small" id="addTransportButton">Adicionar</button>
+            </div>
+            <button class="row-arrow" id="transportArrow" aria-label="Consultar transporte">›</button>
+          </div>
+        </div>
+
+        <section class="welcome-visual" aria-label="Assistente BIA">
+          <div class="city-haze" aria-hidden="true">
+            <span class="building b1"></span><span class="building b2"></span><span class="building b3"></span>
+            <span class="bridge"><i></i><i></i><i></i></span>
+            <div class="illustration-bus"><span class="bus-windows"></span><span class="bus-wheel one"></span><span class="bus-wheel two"></span></div>
+            <div class="road-line"></div>
+          </div>
+          <div class="bia-callout">
+            <p>Olá! Como<br>posso ajudar?</p>
+            <button class="bia-orb" id="openBiaButton" aria-label="Conversar com a BIA">
+              <span class="bot-face"><i></i><i></i><b></b></span>
+              <span class="bia-name">Bia <span class="sparkle">✦</span></span>
+            </button>
+          </div>
+        </section>
+
+        <section class="ad-section" aria-label="Publicidade demonstrativa" id="adSection">
+          <div class="ad-banner">
+            <div class="ad-tag">Anúncio <span>ⓘ</span></div>
+            <div class="ad-copy">
+              <strong>Seu próximo destino<br>mais perto de você.</strong>
+              <span>Com o Boraí, se locomover é mais fácil!</span>
+              <button id="adLearnMore">Saiba mais <b>→</b></button>
+            </div>
+            <div class="ad-train" aria-hidden="true"><span class="train-window"></span><span class="train-window"></span><span class="train-window"></span></div>
+            <button class="ad-close" id="closeAdButton" aria-label="Fechar anúncio">×</button>
+          </div>
+          <div class="ad-dots"><span class="active"></span><span></span><span></span></div>
+        </section>
+
+        <section class="saved-section" id="savedSection" hidden>
+          <div class="section-heading"><h2>Seus trajetos</h2><span>Salvos neste aparelho</span></div>
+          <div id="savedRoutes" class="saved-routes"></div>
+        </section>
+      </section>
+
+      <section class="tab-view" id="biaView" hidden>
+        <div class="tab-heading">
+          <div class="mini-bia">✦</div>
+          <div><p class="eyebrow">ASSISTENTE BORAÍ</p><h1>Olá! Eu sou a BIA.</h1><p>Como posso facilitar seu caminho hoje?</p></div>
+        </div>
+        <div class="chat-panel">
+          <div class="chat-messages" id="chatMessages" aria-live="polite">
+            <div class="message bot-message"><span class="message-avatar">B</span><div><strong>BIA</strong><p>Oi! Eu sou a BIA. Posso explicar o Boraí, ajudar com mobilidade urbana e orientar sobre as funções do aplicativo. 😊</p><small>Assistente com IA Gemini</small></div></div>
+          </div>
+          <div class="suggestion-chips">
+            <button type="button" data-prompt="Como planejo uma rota?">Planejar uma rota</button>
+            <button type="button" data-prompt="Quais transportes o Boraí considera?">Tipos de transporte</button>
+            <button type="button" data-prompt="O que é o Boraí+?">Conhecer o Boraí+</button>
+          </div>
+          <form class="chat-input" id="chatForm">
+            <label class="visually-hidden" for="chatInput">Digite sua mensagem para a BIA</label>
+            <input id="chatInput" placeholder="Escreva sua mensagem..." autocomplete="off" maxlength="500">
+            <button type="submit" aria-label="Enviar mensagem">➤</button>
+          </form>
+          <p class="demo-note">A BIA usa a IA Gemini. Informações de horários e veículos em tempo real ainda dependem de integração com fontes oficiais.</p>
+        </div>
+      </section>
+
+      <section class="tab-view preferences-view" id="preferencesView" hidden>
+        <div class="tab-heading"><div class="heading-icon">★</div><div><p class="eyebrow">PERSONALIZE SUA EXPERIÊNCIA</p><h1>Preferências</h1><p>Deixe o Boraí com a sua cara.</p></div></div>
+        <div class="settings-card">
+          <h2>Meios de transporte</h2>
+          <p>Escolha quais opções deseja priorizar.</p>
+          <label class="setting-line"><span>Ônibus</span><input type="checkbox" data-pref="bus" checked><i></i></label>
+          <label class="setting-line"><span>Trem / CPTM</span><input type="checkbox" data-pref="train" checked><i></i></label>
+          <label class="setting-line"><span>Metrô</span><input type="checkbox" data-pref="metro" checked><i></i></label>
+          <label class="setting-line"><span>VLT / Outros</span><input type="checkbox" data-pref="other" checked><i></i></label>
+        </div>
+        <div class="settings-card">
+          <h2>Acessibilidade e avisos</h2>
+          <label class="setting-line"><span>Usar textos maiores</span><input type="checkbox" data-pref="largeText"><i></i></label>
+          <label class="setting-line"><span>Receber avisos no app</span><input type="checkbox" data-pref="alerts" checked><i></i></label>
+        </div>
+        <p class="settings-saved" id="preferencesSaved" role="status">As preferências ficam salvas neste aparelho.</p>
+      </section>
+
+      <section class="tab-view plus-view" id="plusView" hidden>
+        <div class="plus-hero"><div class="crown">♛</div><p class="eyebrow">MAIS POSSIBILIDADES</p><h1>Boraí<span>+</span></h1><p>Uma experiência com mais personalização e menos interrupções.</p></div>
+        <div class="plus-benefits"><div>✓ <span>Experiência sem anúncios</span></div><div>✓ <span>Mais opções de personalização</span></div><div>✓ <span>Recursos adicionais da BIA</span></div></div>
+        <div class="plans-grid">
+          <button class="plan-card" data-plan="Mensal" type="button"><span>Mensal</span><strong>R$ 8,99</strong><small>por mês</small></button>
+          <button class="plan-card featured" data-plan="Anual" type="button"><span>Anual <b>ECONOMIZE</b></span><strong>R$ 89,99</strong><small>por ano</small></button>
+        </div>
+        <p class="demo-note centered">Demonstração: nenhum pagamento será realizado. A assinatura ainda não está conectada a um sistema de cobrança.</p>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Navegação principal">
+      <button class="nav-item active" data-tab="home" type="button"><span class="nav-icon home-icon">⌂</span><span>Início</span></button>
+      <button class="nav-item" data-tab="bia" type="button"><span class="nav-icon ai-icon">AI</span><span>BIA</span></button>
+      <button class="nav-item" data-tab="preferences" type="button"><span class="nav-icon star-icon">★</span><span>Preferências</span></button>
+      <button class="nav-item" data-tab="plus" type="button"><span class="nav-icon crown-icon">♛</span><span>Boraí+</span></button>
+    </nav>
+
+    <div class="drawer-backdrop" id="drawerBackdrop" hidden></div>
+    <aside class="side-drawer" id="sideDrawer" aria-label="Menu" aria-hidden="true">
+      <div class="drawer-head"><div class="brand-mark">B</div><div><strong>Boraí</strong><small>Mobilidade que aproxima</small></div><button id="closeDrawer" aria-label="Fechar" type="button">×</button></div>
+      <button data-drawer-tab="home" type="button">⌂ <span>Início</span></button>
+      <button data-drawer-tab="bia" type="button">✦ <span>Conversar com a BIA</span></button>
+      <button data-drawer-tab="preferences" type="button">★ <span>Preferências</span></button>
+      <button data-drawer-tab="plus" type="button">♛ <span>Boraí+</span></button>
+      <div class="drawer-foot">Protótipo acadêmico • versão demonstrativa</div>
+    </aside>
+
+    <div class="modal-backdrop" id="modalBackdrop" hidden>
+      <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <button class="modal-close" id="modalClose" aria-label="Fechar" type="button">×</button>
+        <div id="modalContent"></div>
+      </section>
+    </div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </div>
+</body>
+</html>
